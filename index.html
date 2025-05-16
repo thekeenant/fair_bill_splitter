@@ -1,300 +1,477 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fair Bill Splitter</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 700px;
-            margin: 20px auto;
-            background-color: #ffffff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        input[type="number"], input[type="text"] {
-            width: calc(100% - 24px);
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 1em;
-        }
-        input[type="number"]:focus, input[type="text"]:focus {
-            border-color: #3498db;
-            outline: none;
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1em;
-            margin-top: 25px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        #results {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #e9f5fb;
-            border: 1px solid #bde0fe;
-            border-radius: 5px;
-        }
-        .person-input-group {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            background-color: #fdfdfd;
-        }
-        .error-message {
-            color: #e74c3c;
-            font-weight: bold;
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #fddfdf;
-            border: 1px solid #e74c3c;
-            border-radius: 5px;
-        }
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #cce7ff;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #3498db;
-            color: white;
-        }
-        td:nth-child(2), td:nth-child(3), td:nth-child(4) {
-            text-align: right;
-        }
-        .footer-note {
-            font-size: 0.9em;
-            color: #7f8c8d;
-            margin-top: 10px;
-            background-color: #ecf0f1;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .section-divider {
-            margin-top:30px;
-            margin-bottom:30px;
-            border: 0;
-            height: 1px;
-            background: #ddd;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fair Bill Splitter</title>
+  <style>
+    :root {
+      /* Default Dark Theme Colors */
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --container-bg: #1e1e1e;
+      --input-bg: #2c2c2c;
+      --input-text: #e0e0e0;
+      --input-border: #444;
+      --input-focus-border: #007bff;
+      /* Primary accent */
+      --input-focus-shadow: rgba(0, 123, 255, 0.3);
+      --button-bg: #007bff;
+      --button-text: #ffffff;
+      --button-hover-bg: #0056b3;
+      --header-border: #007bff;
+      --secondary-header-color: #bbbbbb;
+      --table-header-bg: #007bff;
+      --table-header-text: #ffffff;
+      --table-border: #3a3a3a;
+      --table-cell-bg: #2a2a2a;
+      --results-bg: #282828;
+      --results-border: #3a3a3a;
+      --error-bg: #4d1f1f;
+      --error-border: #c0392b;
+      --error-text: #f5c5c5;
+      --footer-note-bg: #252525;
+      --footer-note-text: #aaaaaa;
+      --link-color: #6cb2f7;
+      --section-divider-color: #333;
+      --placeholder-color: #777;
+    }
+
+    body.light-mode {
+      /* Light Theme Overrides */
+      --bg-color: #f4f7f6;
+      --text-color: #333;
+      --container-bg: #ffffff;
+      --input-bg: #ffffff;
+      --input-text: #333;
+      --input-border: #ddd;
+      --input-focus-border: #3498db;
+      --input-focus-shadow: rgba(52, 152, 219, 0.3);
+      --button-bg: #3498db;
+      --button-hover-bg: #2980b9;
+      --header-border: #3498db;
+      --secondary-header-color: #555;
+      --table-header-bg: #3498db;
+      --table-border: #cce7ff;
+      --table-cell-bg: #ffffff;
+      --results-bg: #e9f5fb;
+      --results-border: #bde0fe;
+      --error-bg: #fddfdf;
+      --error-border: #e74c3c;
+      --error-text: #c0392b;
+      --footer-note-bg: #ecf0f1;
+      --footer-note-text: #7f8c8d;
+      --link-color: #007bff;
+      --section-divider-color: #ddd;
+      --placeholder-color: #aaa;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 20px auto;
+      background-color: var(--container-bg);
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--input-border);
+    }
+
+    h1,
+    h2 {
+      color: var(--text-color);
+      /* Main headers match body text */
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      margin-top: 0;
+      border-bottom: 2px solid var(--header-border);
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      color: var(--secondary-header-color);
+      /* Sub-headers slightly different */
+      border-bottom: 1px solid var(--section-divider-color);
+      padding-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
+    input[type="number"],
+    input[type="text"] {
+      width: calc(100% - 24px);
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid var(--input-border);
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 1em;
+      background-color: var(--input-bg);
+      color: var(--input-text);
+    }
+
+    input[type="number"]::placeholder,
+    input[type="text"]::placeholder {
+      color: var(--placeholder-color);
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus {
+      border-color: var(--input-focus-border);
+      outline: none;
+      box-shadow: 0 0 5px var(--input-focus-shadow);
+    }
+
+    button,
+    .theme-toggle {
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1em;
+      margin-top: 25px;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+      /* For theme toggle */
+    }
+
+    button:hover,
+    .theme-toggle:hover {
+      background-color: var(--button-hover-bg);
+    }
+
+    .theme-toggle {
+      /* Specific styling for theme toggle if needed */
+      font-size: 0.9em;
+      padding: 8px 15px;
+      margin-top: 0;
+      margin-bottom: 15px;
+      /* Space it out */
+      float: right;
+    }
+
+    #results {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: var(--results-bg);
+      border: 1px solid var(--results-border);
+      border-radius: 5px;
+    }
+
+    .person-input-group {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid var(--input-border);
+      /* Use same border as inputs */
+      border-radius: 5px;
+      background-color: var(--input-bg);
+      /* Consistent with input fields */
+    }
+
+    .error-message {
+      color: var(--error-text);
+      font-weight: bold;
+      margin-top: 15px;
+      padding: 10px;
+      background-color: var(--error-bg);
+      border: 1px solid var(--error-border);
+      border-radius: 5px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--table-border);
+      padding: 12px;
+      text-align: left;
+      background-color: var(--table-cell-bg);
+    }
+
+    th {
+      background-color: var(--table-header-bg);
+      color: var(--table-header-text);
+    }
+
+    td:nth-child(2),
+    td:nth-child(3),
+    td:nth-child(4) {
+      /* Align currency to the right */
+      text-align: right;
+    }
+
+    .footer-note {
+      font-size: 0.9em;
+      color: var(--footer-note-text);
+      margin-top: 10px;
+      background-color: var(--footer-note-bg);
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    .footer-note ul {
+      padding-left: 20px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .section-divider {
+      margin-top: 30px;
+      margin-bottom: 30px;
+      border: 0;
+      height: 1px;
+      background: var(--section-divider-color);
+    }
+
+    .clearfix::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>🍽️ Fair Bill Splitter</h1>
+  <div class="container">
+    <div class="clearfix">
+      <button id="themeToggle" class="theme-toggle">Toggle Theme</button>
+    </div>
+    <h1>🍽️ Fair Bill Splitter</h1>
 
-        <h2>1. Bill Information</h2>
-        <div>
-            <label for="totalBill">Total Bill (including tax & tip):</label>
-            <input type="number" id="totalBill" step="0.01" placeholder="e.g., 123.45">
-        </div>
-        <div>
-            <label for="subtotal">Subtotal (bill amount before tax & tip):</label>
-            <input type="number" id="subtotal" step="0.01" placeholder="e.g., 100.00">
-        </div>
-        <div>
-            <label for="numPeople">Number of People:</label>
-            <input type="number" id="numPeople" step="1" min="1" placeholder="e.g., 4">
-        </div>
-        <button onclick="setupPeopleInputs()">Next: Add People Details</button>
+    <h2>1. Bill Information</h2>
+    <div>
+      <label for="totalBill">Total Bill (including tax & tip):</label>
+      <input type="number" id="totalBill" step="0.01" placeholder="e.g., 123.45">
+    </div>
+    <div>
+      <label for="subtotal">Subtotal (bill amount before tax & tip):</label>
+      <input type="number" id="subtotal" step="0.01" placeholder="e.g., 100.00">
+    </div>
+    <div>
+      <label for="numPeople">Number of People:</label>
+      <input type="number" id="numPeople" step="1" min="1" placeholder="e.g., 4">
+    </div>
+    <button onclick="setupPeopleInputs()">Next: Add People Details</button>
 
-        <div id="peopleDetailsContainer" style="display:none;">
-            <hr class="section-divider">
-            <h2>2. Individual Adjustments</h2>
-            <p class="footer-note">
-                For each person, enter their pre-tax/tip adjustment amount:
-                <ul>
-                    <li><strong>Positive value (e.g., 15):</strong> If they had items costing $15 that only they consumed (e.g., a specific dish or drink).</li>
-                    <li><strong>Negative value (e.g., -5):</strong> If the group agrees they should pay $5 less towards the shared costs (e.g., they ate significantly less of shared items). This $5 will be absorbed into the shared pool paid by everyone.</li>
-                    <li><strong>Zero or blank:</strong> If they have no specific adjustments and will pay an equal part of the shared costs plus any of their own positive adjustments.</li>
-                </ul>
-            </p>
-            <div id="peopleInputs"></div>
-            <button onclick="calculateSplit()">💸 Calculate Split</button>
-        </div>
-        
-        <hr class="section-divider">
-        <h2>3. Breakdown Per Person</h2>
-        <div id="results">
-            <p>Please fill in the bill and people details above, then click "Calculate Split".</p>
-        </div>
-        <div id="errorMessage" class="error-message" style="display:none;"></div>
+    <div id="peopleDetailsContainer" style="display:none;">
+      <hr class="section-divider">
+      <h2>2. Individual Adjustments</h2>
+      <p class="footer-note">
+        For each person, enter their pre-tax/tip adjustment amount:
+      <ul>
+        <li><strong>Positive value (e.g., 15):</strong> If they had items costing $15 that only they consumed (e.g., a
+          specific dish or drink).</li>
+        <li><strong>Negative value (e.g., -5):</strong> If the group agrees they should pay $5 less towards the shared
+          costs (e.g., they ate significantly less of shared items). This $5 will be absorbed into the shared pool paid
+          by everyone.</li>
+        <li><strong>Zero or blank:</strong> If they have no specific adjustments and will pay an equal part of the
+          shared costs plus any of their own positive adjustments.</li>
+      </ul>
+      </p>
+      <div id="peopleInputs"></div>
+      <button onclick="calculateSplit()">💸 Calculate Split</button>
     </div>
 
-    <script>
-        function setupPeopleInputs() {
-            const numPeopleInput = document.getElementById('numPeople');
-            const peopleInputsDiv = document.getElementById('peopleInputs');
-            const peopleDetailsContainer = document.getElementById('peopleDetailsContainer');
-            const errorMessageDiv = document.getElementById('errorMessage');
-            
-            errorMessageDiv.style.display = 'none';
-            errorMessageDiv.textContent = '';
+    <hr class="section-divider">
+    <h2>3. Breakdown Per Person</h2>
+    <div id="results">
+      <p>Please fill in the bill and people details above, then click "Calculate Split".</p>
+    </div>
+    <div id="errorMessage" class="error-message" style="display:none;"></div>
+  </div>
 
-            const numPeople = parseInt(numPeopleInput.value);
+  <script>
+    const themeToggle = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('theme');
 
-            if (isNaN(numPeople) || numPeople < 1) {
-                errorMessageDiv.textContent = 'Please enter a valid number of people (at least 1).';
-                errorMessageDiv.style.display = 'block';
-                peopleDetailsContainer.style.display = 'none';
-                return;
-            }
+    function applyTheme(theme) {
+      if (theme === 'light') {
+        document.body.classList.add('light-mode');
+        themeToggle.textContent = 'Switch to Dark Mode';
+      } else {
+        document.body.classList.remove('light-mode');
+        themeToggle.textContent = 'Switch to Light Mode';
+      }
+    }
 
-            peopleInputsDiv.innerHTML = ''; // Clear previous inputs
+    if (currentTheme) {
+      applyTheme(currentTheme);
+    } else {
+      applyTheme('dark'); // Default to dark mode
+    }
 
-            for (let i = 0; i < numPeople; i++) {
-                const personGroup = document.createElement('div');
-                personGroup.className = 'person-input-group';
+    themeToggle.addEventListener('click', () => {
+      let theme = 'dark';
+      if (!document.body.classList.contains('light-mode')) {
+        theme = 'light';
+      }
+      applyTheme(theme);
+      localStorage.setItem('theme', theme);
+    });
 
-                const nameLabel = document.createElement('label');
-                nameLabel.textContent = `Person ${i + 1} Name (Optional):`;
-                const nameInput = document.createElement('input');
-                nameInput.type = 'text';
-                nameInput.id = `personName${i}`;
-                nameInput.placeholder = `Person ${i + 1}`;
-                
-                const adjustmentLabel = document.createElement('label');
-                adjustmentLabel.textContent = `Person ${i + 1} Adjustment Amount (pre-tax/tip):`;
-                const adjustmentInput = document.createElement('input');
-                adjustmentInput.type = 'number';
-                adjustmentInput.id = `adjustment${i}`;
-                adjustmentInput.step = '0.01';
-                adjustmentInput.placeholder = '0.00';
+    function setupPeopleInputs() {
+      const numPeopleInput = document.getElementById('numPeople');
+      const peopleInputsDiv = document.getElementById('peopleInputs');
+      const peopleDetailsContainer = document.getElementById('peopleDetailsContainer');
+      const errorMessageDiv = document.getElementById('errorMessage');
 
-                personGroup.appendChild(nameLabel);
-                personGroup.appendChild(nameInput);
-                personGroup.appendChild(document.createElement('br'));
-                personGroup.appendChild(adjustmentLabel);
-                personGroup.appendChild(adjustmentInput);
-                
-                peopleInputsDiv.appendChild(personGroup);
-            }
-            peopleDetailsContainer.style.display = 'block';
+      errorMessageDiv.style.display = 'none';
+      errorMessageDiv.textContent = '';
+
+      const numPeople = parseInt(numPeopleInput.value);
+
+      if (isNaN(numPeople) || numPeople < 1) {
+        errorMessageDiv.textContent = 'Please enter a valid number of people (at least 1).';
+        errorMessageDiv.style.display = 'block';
+        peopleDetailsContainer.style.display = 'none';
+        return;
+      }
+
+      peopleInputsDiv.innerHTML = ''; // Clear previous inputs
+
+      for (let i = 0; i < numPeople; i++) {
+        const personGroup = document.createElement('div');
+        personGroup.className = 'person-input-group';
+
+        const nameLabel = document.createElement('label');
+        nameLabel.htmlFor = `personName${i}`;
+        nameLabel.textContent = `Person ${i + 1} Name (Optional):`;
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.id = `personName${i}`;
+        nameInput.placeholder = `Person ${i + 1}`;
+
+        const adjustmentLabel = document.createElement('label');
+        adjustmentLabel.htmlFor = `adjustment${i}`;
+        adjustmentLabel.textContent = `Person ${i + 1} Adjustment Amount (pre-tax/tip):`;
+        const adjustmentInput = document.createElement('input');
+        adjustmentInput.type = 'number';
+        adjustmentInput.id = `adjustment${i}`;
+        adjustmentInput.step = '0.01';
+        adjustmentInput.placeholder = '0.00';
+
+        personGroup.appendChild(nameLabel);
+        personGroup.appendChild(nameInput);
+        personGroup.appendChild(document.createElement('br')); // Simple spacing
+        personGroup.appendChild(adjustmentLabel);
+        personGroup.appendChild(adjustmentInput);
+
+        peopleInputsDiv.appendChild(personGroup);
+      }
+      peopleDetailsContainer.style.display = 'block';
+    }
+
+    function calculateSplit() {
+      const totalBill = parseFloat(document.getElementById('totalBill').value);
+      const subtotal = parseFloat(document.getElementById('subtotal').value);
+      const numPeople = parseInt(document.getElementById('numPeople').value);
+      const resultsDiv = document.getElementById('results');
+      const errorMessageDiv = document.getElementById('errorMessage');
+
+      resultsDiv.innerHTML = '<p>Calculating...</p>'; // Clear previous results
+      errorMessageDiv.style.display = 'none';
+      errorMessageDiv.textContent = '';
+
+      // Basic Validations
+      if (isNaN(totalBill) || isNaN(subtotal) || isNaN(numPeople)) {
+        errorMessageDiv.textContent = 'Please enter valid numbers for Total Bill, Subtotal, and Number of People.';
+        errorMessageDiv.style.display = 'block';
+        resultsDiv.innerHTML = '<p>Please fill in the details above and click "Calculate Split".</p>';
+        return;
+      }
+      if (numPeople < 1) {
+        errorMessageDiv.textContent = 'Number of People must be at least 1.';
+        errorMessageDiv.style.display = 'block';
+        resultsDiv.innerHTML = '<p>Please fill in the details above and click "Calculate Split".</p>';
+        return;
+      }
+      if (subtotal < 0 || totalBill < 0) {
+        errorMessageDiv.textContent = 'Bill amounts cannot be negative.';
+        errorMessageDiv.style.display = 'block';
+        resultsDiv.innerHTML = '<p>Please fill in the details above and click "Calculate Split".</p>';
+        return;
+      }
+      if (totalBill < subtotal) {
+        errorMessageDiv.textContent = 'Total Bill cannot be less than Subtotal.';
+        errorMessageDiv.style.display = 'block';
+        resultsDiv.innerHTML = '<p>Please fill in the details above and click "Calculate Split".</p>';
+        return;
+      }
+
+      const personNames = [];
+      const adjustments = [];
+      for (let i = 0; i < numPeople; i++) {
+        const nameInput = document.getElementById(`personName${i}`);
+        personNames.push(nameInput.value.trim() || `Person ${i + 1}`);
+
+        const adjInput = document.getElementById(`adjustment${i}`);
+        const adjValue = parseFloat(adjInput.value) || 0; // Default to 0 if empty or invalid
+        adjustments.push(adjValue);
+      }
+
+      if (subtotal === 0 && totalBill > 0) {
+        // If subtotal is 0 but there's a total bill (e.g. cover charge only), split total bill evenly. 
+        // Adjustments are ignored as they relate to subtotal items.
+        resultsDiv.innerHTML = '<p>Subtotal is $0.00. The total bill will be split evenly.</p>';
+        const table = document.createElement('table');
+        table.innerHTML = `<thead><tr><th>Person</th><th>Amount Owed</th></tr></thead><tbody></tbody>`;
+        const tbody = table.querySelector('tbody');
+        let totalCalculated = 0;
+
+        for (let i = 0; i < numPeople; i++) {
+          const amountOwed = totalBill / numPeople;
+          totalCalculated += amountOwed;
+          const row = tbody.insertRow();
+          row.insertCell().textContent = personNames[i];
+          row.insertCell().textContent = `$${amountOwed.toFixed(2)}`;
         }
+        resultsDiv.appendChild(table);
+        resultsDiv.innerHTML += `<p><strong>Overall Total: $${totalCalculated.toFixed(2)}</strong> (Original Total Bill: $${totalBill.toFixed(2)})</p>`;
+        if (Math.abs(totalCalculated - totalBill) > 0.001 * numPeople) { // Allow tiny rounding diff per person
+          errorMessageDiv.textContent = 'Warning: Calculated total differs slightly from original total bill due to rounding with $0 subtotal.';
+          errorMessageDiv.style.display = 'block';
+        }
+        return;
+      }
+      if (subtotal === 0 && totalBill === 0) {
+        resultsDiv.innerHTML = '<p>Subtotal and Total Bill are $0.00. Nothing to split!</p>';
+        return;
+      }
 
-        function calculateSplit() {
-            const totalBill = parseFloat(document.getElementById('totalBill').value);
-            const subtotal = parseFloat(document.getElementById('subtotal').value);
-            const numPeople = parseInt(document.getElementById('numPeople').value);
-            const resultsDiv = document.getElementById('results');
-            const errorMessageDiv = document.getElementById('errorMessage');
+      const totalTaxTipAmount = totalBill - subtotal;
+      const taxTipRate = subtotal > 0 ? totalTaxTipAmount / subtotal : 0;
 
-            resultsDiv.innerHTML = ''; // Clear previous results
-            errorMessageDiv.style.display = 'none';
-            errorMessageDiv.textContent = '';
+      const totalAdjustments = adjustments.reduce((sum, adj) => sum + adj, 0);
 
-            // Basic Validations
-            if (isNaN(totalBill) || isNaN(subtotal) || isNaN(numPeople)) {
-                errorMessageDiv.textContent = 'Please enter valid numbers for Total Bill, Subtotal, and Number of People.';
-                errorMessageDiv.style.display = 'block';
-                return;
-            }
-            if (numPeople < 1) {
-                errorMessageDiv.textContent = 'Number of People must be at least 1.';
-                errorMessageDiv.style.display = 'block';
-                return;
-            }
-            if (subtotal < 0 || totalBill < 0) {
-                errorMessageDiv.textContent = 'Bill amounts cannot be negative.';
-                errorMessageDiv.style.display = 'block';
-                return;
-            }
-            if (totalBill < subtotal) {
-                errorMessageDiv.textContent = 'Total Bill cannot be less than Subtotal.';
-                errorMessageDiv.style.display = 'block';
-                return;
-            }
+      const sharedBaseSubtotal = subtotal - totalAdjustments;
+      const sharedBasePerPerson = sharedBaseSubtotal / numPeople;
 
-            const personNames = [];
-            const adjustments = [];
-            for (let i = 0; i < numPeople; i++) {
-                const nameInput = document.getElementById(`personName${i}`);
-                personNames.push(nameInput.value.trim() || `Person ${i + 1}`);
-                
-                const adjInput = document.getElementById(`adjustment${i}`);
-                const adjValue = parseFloat(adjInput.value) || 0; // Default to 0 if empty or invalid
-                adjustments.push(adjValue);
-            }
-
-            if (subtotal === 0) {
-                // If subtotal is 0, split total bill evenly. Adjustments are ignored as they relate to subtotal items.
-                resultsDiv.innerHTML = '<p>Subtotal is $0.00. The total bill will be split evenly.</p>';
-                const table = document.createElement('table');
-                table.innerHTML = `<thead><tr><th>Person</th><th>Amount Owed</th></tr></thead><tbody></tbody>`;
-                const tbody = table.querySelector('tbody');
-                let totalCalculated = 0;
-
-                for (let i = 0; i < numPeople; i++) {
-                    const amountOwed = totalBill / numPeople;
-                    totalCalculated += amountOwed;
-                    const row = tbody.insertRow();
-                    row.insertCell().textContent = personNames[i];
-                    row.insertCell().textContent = `$${amountOwed.toFixed(2)}`;
-                }
-                resultsDiv.appendChild(table);
-                resultsDiv.innerHTML += `<p><strong>Overall Total: $${totalCalculated.toFixed(2)}</strong> (Original Total Bill: $${totalBill.toFixed(2)})</p>`;
-                if (Math.abs(totalCalculated - totalBill) > 0.01 * numPeople) { // Allow small rounding diff per person
-                     errorMessageDiv.textContent = 'Warning: Calculated total differs slightly from original total bill due to rounding with $0 subtotal.';
-                     errorMessageDiv.style.display = 'block';
-                }
-                return;
-            }
-            
-            const totalTaxTipAmount = totalBill - subtotal;
-            const taxTipRate = totalTaxTipAmount / subtotal; // This is fine even if subtotal is 0, handled by above block
-
-            const totalAdjustments = adjustments.reduce((sum, adj) => sum + adj, 0);
-            
-            // This is the portion of the subtotal that remains after all individual-specific costs/credits are accounted for.
-            // This "pot" is then split evenly.
-            const sharedBaseSubtotal = subtotal - totalAdjustments; 
-            const sharedBasePerPerson = sharedBaseSubtotal / numPeople;
-
-            let resultsTable = `
+      let resultsTableHTML = `
                 <table>
                     <thead>
                         <tr>
@@ -305,44 +482,46 @@
                         </tr>
                     </thead>
                     <tbody>`;
-            
-            let overallCalculatedSubtotal = 0;
-            let overallCalculatedTaxTip = 0;
-            let overallCalculatedTotal = 0;
-            let validationError = false;
 
-            for (let i = 0; i < numPeople; i++) {
-                const personSubtotal = sharedBasePerPerson + adjustments[i];
+      let overallCalculatedSubtotal = 0;
+      let overallCalculatedTaxTip = 0;
+      let overallCalculatedTotal = 0;
+      let validationError = false;
 
-                if (personSubtotal < 0) {
-                    errorMessageDiv.textContent = `Error: ${personNames[i]}'s calculated subtotal (${personSubtotal.toFixed(2)}) is negative. This might happen if their negative adjustment is too large compared to their share of common costs. Please review adjustments.`;
-                    errorMessageDiv.style.display = 'block';
-                    validationError = true;
-                    break; 
-                }
+      for (let i = 0; i < numPeople; i++) {
+        const personSubtotal = sharedBasePerPerson + adjustments[i];
 
-                const personTaxTip = personSubtotal * taxTipRate;
-                const personTotal = personSubtotal + personTaxTip;
+        if (personSubtotal < -0.001) { // Allow for very minor negative due to float precision, treat as error if meaningfully negative
+          errorMessageDiv.textContent = `Error: ${personNames[i]}'s calculated subtotal (${personSubtotal.toFixed(2)}) is negative. This might happen if their negative adjustment is too large compared to their share of common costs. Please review adjustments.`;
+          errorMessageDiv.style.display = 'block';
+          validationError = true;
+          break;
+        }
+        // Ensure personSubtotal is not negative for calculation, especially for tax/tip.
+        const nonNegativePersonSubtotal = Math.max(0, personSubtotal);
 
-                overallCalculatedSubtotal += personSubtotal;
-                overallCalculatedTaxTip += personTaxTip;
-                overallCalculatedTotal += personTotal;
+        const personTaxTip = nonNegativePersonSubtotal * taxTipRate;
+        const personTotal = nonNegativePersonSubtotal + personTaxTip;
 
-                resultsTable += `
+        overallCalculatedSubtotal += nonNegativePersonSubtotal;
+        overallCalculatedTaxTip += personTaxTip;
+        overallCalculatedTotal += personTotal;
+
+        resultsTableHTML += `
                     <tr>
                         <td>${personNames[i]}</td>
-                        <td>$${personSubtotal.toFixed(2)}</td>
+                        <td>$${nonNegativePersonSubtotal.toFixed(2)}</td>
                         <td>$${personTaxTip.toFixed(2)}</td>
                         <td><strong>$${personTotal.toFixed(2)}</strong></td>
                     </tr>`;
-            }
+      }
 
-            if (validationError) {
-                resultsDiv.innerHTML = "<p>Could not calculate due to errors mentioned above.</p>";
-                return;
-            }
+      if (validationError) {
+        resultsDiv.innerHTML = "<p>Could not calculate due to errors mentioned above. Please adjust inputs.</p>";
+        return;
+      }
 
-            resultsTable += `
+      resultsTableHTML += `
                     </tbody>
                     <tfoot>
                         <tr>
@@ -353,21 +532,25 @@
                         </tr>
                     </tfoot>
                 </table>`;
-            
-            resultsDiv.innerHTML = resultsTable;
 
-            // Final verification
-            let summaryText = `<p>Original Subtotal: $${subtotal.toFixed(2)} | Calculated Sum of Individual Subtotals: $${overallCalculatedSubtotal.toFixed(2)}</p>`;
-            summaryText += `<p>Original Tax & Tip: $${totalTaxTipAmount.toFixed(2)} | Calculated Sum of Individual Tax & Tip: $${overallCalculatedTaxTip.toFixed(2)}</p>`;
-            summaryText += `<p>Original Total Bill: $${totalBill.toFixed(2)} | Calculated Sum of Individual Totals: $${overallCalculatedTotal.toFixed(2)}</p>`;
-            
-            if (Math.abs(overallCalculatedTotal - totalBill) > 0.01 * numPeople ) { // Allow $0.01 diff per person for rounding
-                summaryText += `<p style="color:red; font-weight:bold;">Warning: The sum of calculated individual totals ($${overallCalculatedTotal.toFixed(2)}) doesn't perfectly match the original total bill ($${totalBill.toFixed(2)}). This can be due to rounding. Double check calculations if the difference is significant.</p>`;
-            } else {
-                 summaryText += `<p style="color:green; font-weight:bold;">The calculated totals match the bill!</p>`;
-            }
-            resultsDiv.innerHTML += summaryText;
-        }
-    </script>
+      resultsDiv.innerHTML = resultsTableHTML;
+
+      // Final verification
+      let summaryText = `<p>Original Subtotal: $${subtotal.toFixed(2)} | Calculated Sum of Individual Subtotals: $${overallCalculatedSubtotal.toFixed(2)}</p>`;
+      summaryText += `<p>Original Tax & Tip: $${totalTaxTipAmount.toFixed(2)} | Calculated Sum of Individual Tax & Tip: $${overallCalculatedTaxTip.toFixed(2)}</p>`;
+      summaryText += `<p>Original Total Bill: $${totalBill.toFixed(2)} | Calculated Sum of Individual Totals: $${overallCalculatedTotal.toFixed(2)}</p>`;
+
+      const difference = Math.abs(overallCalculatedTotal - totalBill);
+      if (difference > 0.01 * numPeople) { // Allow $0.01 diff per person for rounding
+        summaryText += `<p class="error-message" style="color: var(--error-text); background-color: var(--error-bg); border-color: var(--error-border);">Warning: The sum of calculated individual totals ($${overallCalculatedTotal.toFixed(2)}) differs from the original total bill ($${totalBill.toFixed(2)}) by $${difference.toFixed(2)}. This can be due to rounding. Double-check if the difference is significant.</p>`;
+      } else if (difference > 0.001) { // Minor difference, still notify
+        summaryText += `<p style="color: var(--text-color); font-weight:bold;">Note: The sum of calculated totals ($${overallCalculatedTotal.toFixed(2)}) is very close to the original bill ($${totalBill.toFixed(2)}). A tiny difference ($${difference.toFixed(3)}) might exist due to rounding.</p>`;
+      } else {
+        summaryText += `<p style="color: #28a745; font-weight:bold;">The calculated totals match the bill!</p>`; // Explicitly green for success
+      }
+      resultsDiv.innerHTML += summaryText;
+    }
+  </script>
 </body>
+
 </html>
